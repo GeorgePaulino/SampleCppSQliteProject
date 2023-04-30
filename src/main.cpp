@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sqlite3.h>
-#include "classes/ConstructionCompany.hpp"
+#include "ConstructionCompany.hpp"
 
 using namespace std;
 

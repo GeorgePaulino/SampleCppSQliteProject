@@ -1,3 +1,4 @@
 {
+    "svg.preview.background": "black",
     "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
 }

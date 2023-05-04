@@ -20,5 +20,7 @@ public:
     vector<Building> buildings;
 
     ConstructionCompany(string cnpj, string name, string zip, string phone, float avaliation);
+
     ~ConstructionCompany();
+
 };

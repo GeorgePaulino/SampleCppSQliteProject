@@ -5,18 +5,33 @@
 
 using namespace std;
 
+
+class P
+{
+public:
+    int id;
+    string nome;
+
+     P(int id, string nome):id(id), nome(nome){}
+
+    };
+
 // Create a callback function
 int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
-    ConstructionCompany construction("K", "k", "l", "p", 5);
-    
+    P p( 12, " ");
     // int argc: holds the number of results
     // (array) azColName: holds each column returned
     // (array) argv: holds each value
 
     for (int i = 0; i < argc; i++)
     {
-
+        if(azColName[i] == "Id" ){
+            p.id = (int)argv[i];
+        }
+        if(azColName[i] == "Name"){
+            p.nome = (string)argv[i];
+        }
         // Show column name, value, and newline
         cout << azColName[i] << ": " << argv[i] << endl;
     }
@@ -24,7 +39,7 @@ int callback(void *NotUsed, int argc, char **argv, char **azColName)
     // Insert a newline
     cout << endl;
 
-    // Return successful
+    // Return successful 
     return 0;
 }
 

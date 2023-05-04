@@ -7,7 +7,7 @@ using namespace std;
 
 class PysicalPerson : public ClientBase{
 public:
-    Building person[1];
+    Building person;
     float income;
     
     PysicalPerson(){}

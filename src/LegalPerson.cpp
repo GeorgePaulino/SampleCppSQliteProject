@@ -1,14 +1,8 @@
 #include "LegalPerson.hpp"
 
-    LegalPerson::LegalPerson()
-    {
+    LegalPerson::LegalPerson(){}
 
-    }
-
-    LegalPerson::~LegalPerson()
-    {
-
-    }
+    LegalPerson::~LegalPerson(){}
 
     void LegalPerson::avaliation(float a){
     if(a < 3){
@@ -20,6 +14,10 @@
     } else {
         avaliationName = "Avaliação inválida";
     }
+    }
 
-}
-
+    void LegalPerson::deletePerson( LegalPerson* p){
+        delete p;
+        cout << "Pessoa Fisica deletada ";
+        return;
+    }

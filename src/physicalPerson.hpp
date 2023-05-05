@@ -14,4 +14,5 @@ public:
 
     void readPerson(){}
     void showPerson(){}
+    void deletePerson( PysicalPerson* p){}
 };

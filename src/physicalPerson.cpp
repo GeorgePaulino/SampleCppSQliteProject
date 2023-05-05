@@ -9,3 +9,9 @@ using namespace std;
 
     void PysicalPerson::readPerson( ){}
     void PysicalPerson::showPerson( ){}
+    
+    void PysicalPerson::deletePerson( PysicalPerson* p){
+        delete p;
+        cout << "Pessoa Fisica deletada";
+        return;
+    }

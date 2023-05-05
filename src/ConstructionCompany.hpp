@@ -23,4 +23,5 @@ public:
 
     ~ConstructionCompany();
 
+    void deleteCompany(ConstructionCompany *cc);
 };

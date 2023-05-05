@@ -11,3 +11,9 @@ ConstructionCompany::~ConstructionCompany()
     // Deallocating vector memory
     vector<Building>().swap(buildings);
 }
+
+void ConstructionCompany::deleteCompany( ConstructionCompany* cc){
+    delete cc;
+    cout << " Companinha de Construção Deleta";
+    return;
+}

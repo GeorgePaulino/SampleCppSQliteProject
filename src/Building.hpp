@@ -15,4 +15,5 @@ public:
 
     Building();
     ~Building();
+    void deleteBuilding(Building *b);
 };

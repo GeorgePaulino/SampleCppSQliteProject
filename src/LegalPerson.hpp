@@ -13,8 +13,10 @@ public:
     float avaliation;
     string occupationArea, avaliationName;
 
-    LegalPerson();
-    ~LegalPerson();
+    LegalPerson(){}
+    ~LegalPerson(){}
 
-    void avaliation(float a);
+    void deletePerson(LegalPerson *p){}
+
+    void avaliation(float a){}
 };

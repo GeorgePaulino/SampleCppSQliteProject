@@ -8,18 +8,18 @@
 #include "ConstructionCompany.hpp"
 #include "ClientBase.hpp"
 #include "Building.hpp"
-#include "PhysicalPerson.hpp"
-#include "LegalPerson.hpp"
+#include "PhysicalClient.hpp"
+#include "LegalClient.hpp"
 
-class Manager
+class DataManager
 {
 public:
     vector<ConstructionCompany> companies;
     vector<ClientBase*> allClients;
-    vector<PhysicalPerson> physicalClients;
-    vector<LegalPerson> legalClients;
+    vector<PhysicalClient> physicalClients;
+    vector<LegalClient> legalClients;
 
-    Manager();
+    DataManager();
 
     /**
      * @brief Load all companies to companies vector
@@ -29,6 +29,7 @@ public:
      * [2 - Cannot prepare statement]
      */
     int LoadCompanies();
+    
     /**
      * @brief Load all companies to companies vector
      * @return 
@@ -37,6 +38,7 @@ public:
      * [2 - Cannot prepare statement]
      */
     int LoadPhysicalClients();
+
     /**
      * @brief Load all companies to companies vector
      * @return 
@@ -46,6 +48,6 @@ public:
      * [3 - Cannot prepare statement 2]
      */
     int LoadLegalClients();
-    void SetCompaniesRelations();
 
+    void SetCompaniesRelations();
 };

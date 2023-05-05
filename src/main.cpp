@@ -1,8 +1,8 @@
 #include <iostream>
-#include "Manager.hpp"
+#include "DataManager.hpp"
 
 
 int main() {
-    Manager mng = Manager();
+    DataManager mng = DataManager();
     return 0;
 }

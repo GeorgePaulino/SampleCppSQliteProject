@@ -15,4 +15,6 @@ public:
 
     ClientBase(/* args */);
     virtual ~ClientBase();
+    virtual int DeleteClient() = 0;
+    virtual void PrintClient() = 0;
 };

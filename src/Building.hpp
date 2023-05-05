@@ -1,8 +1,11 @@
 #pragma once
+
+#include<sqlite3.h>
+#include<string>
+#include <iostream>
+
 #include"ConstructionCompany.hpp"
 #include"ClientBase.hpp"
-
-#include<string>
 
 using namespace std;
 
@@ -13,14 +16,15 @@ class Building
 {
 public:
     ConstructionCompany* company;
-    ClientBase* person;
+    ClientBase* client;
 
     float price;
     string name;
     string startDate;
     string endDate;
 
-    Building(/* args */);
+    Building();
     ~Building();
-    void deleteBuilding(Building *b);
+
+    int DeleteBuilding();
 };

@@ -1,14 +1,15 @@
 #include <string>
-#include "Manager.hpp"
+#include "DataManager.hpp"
 
-Manager::Manager()
+DataManager::DataManager()
 {
     LoadCompanies();
     LoadPhysicalClients();
     LoadLegalClients();
+    SetCompaniesRelations();
 }
 
-int Manager::LoadCompanies()
+int DataManager::LoadCompanies()
 {
     sqlite3 *db;
     int rc = sqlite3_open("./database/Database.sqlite", &db);
@@ -51,7 +52,7 @@ int Manager::LoadCompanies()
     return 0;
 }
 
-int Manager::LoadPhysicalClients()
+int DataManager::LoadPhysicalClients()
 {
     sqlite3 *db;
     int rc = sqlite3_open("./database/Database.sqlite", &db);
@@ -63,7 +64,7 @@ int Manager::LoadPhysicalClients()
     }
 
     sqlite3_stmt *physicalClientsDataRow;
-    rc = sqlite3_prepare_v2(db, "SELECT * FROM ClientPhysicalPerson", -1, &physicalClientsDataRow, nullptr);
+    rc = sqlite3_prepare_v2(db, "SELECT * FROM ClientPhysicalClient", -1, &physicalClientsDataRow, nullptr);
     if (rc != SQLITE_OK)
     {
         std::cerr << "Cannot prepare statement: " << sqlite3_errmsg(db) << std::endl;
@@ -73,7 +74,7 @@ int Manager::LoadPhysicalClients()
 
     while (sqlite3_step(physicalClientsDataRow) == SQLITE_ROW)
     {
-        PhysicalPerson data;
+        PhysicalClient data;
         data.type = 0;
         data.id = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 0)));
         data.name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 1)));
@@ -87,7 +88,7 @@ int Manager::LoadPhysicalClients()
                 data.building.company = &c;
             }
         }
-        data.building.person = &data;
+        data.building.client = &data;
         data.building.name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 5)));
         data.building.price = sqlite3_column_double(physicalClientsDataRow, 6);
         data.building.startDate = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 7)));
@@ -110,7 +111,7 @@ int Manager::LoadPhysicalClients()
     return 0;
 }
 
-int Manager::LoadLegalClients()
+int DataManager::LoadLegalClients()
 {
     sqlite3 *db;
     int rc = sqlite3_open("./database/Database.sqlite", &db);
@@ -122,7 +123,7 @@ int Manager::LoadLegalClients()
     }
 
     sqlite3_stmt *legalClientsDataRow;
-    rc = sqlite3_prepare_v2(db, "SELECT * FROM ClientLegalPerson", -1, &legalClientsDataRow, nullptr);
+    rc = sqlite3_prepare_v2(db, "SELECT * FROM ClientLegalClient", -1, &legalClientsDataRow, nullptr);
     if (rc != SQLITE_OK)
     {
         std::cerr << "Cannot prepare statement: " << sqlite3_errmsg(db) << std::endl;
@@ -132,7 +133,7 @@ int Manager::LoadLegalClients()
 
     while (sqlite3_step(legalClientsDataRow) == SQLITE_ROW)
     {
-        LegalPerson data;
+        LegalClient data;
         data.type = 1;
         data.id = std::string(reinterpret_cast<const char *>(sqlite3_column_text(legalClientsDataRow, 0)));
         data.name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(legalClientsDataRow, 1)));
@@ -164,7 +165,7 @@ int Manager::LoadLegalClients()
                     building.company = &c;
                 }
             }
-            building.person = &data;
+            building.client = &data;
             building.name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(legalClientBuildingsDataRow, 2)));
             building.price = sqlite3_column_double(legalClientBuildingsDataRow, 3);
             building.startDate = std::string(reinterpret_cast<const char *>(sqlite3_column_text(legalClientBuildingsDataRow, 4)));
@@ -191,13 +192,13 @@ int Manager::LoadLegalClients()
     return 0;
 }
 
-void Manager::SetCompaniesRelations()
+void DataManager::SetCompaniesRelations()
 {
     for (auto client : allClients)
     {
         if (client->type == 0)
         {
-            PhysicalPerson *pp = (PhysicalPerson *)client;
+            PhysicalClient *pp = (PhysicalClient *)client;
             for (auto &c : companies)
             {
                 if (pp->building.company->cnpj == c.cnpj)
@@ -208,7 +209,7 @@ void Manager::SetCompaniesRelations()
         }
         if (client->type == 1)
         {
-            LegalPerson *lp = (LegalPerson *)client;
+            LegalClient *lp = (LegalClient *)client;
             for(auto &b : lp->buildings){
                 for(auto &c: companies){
                     if(b.company->cnpj == c.cnpj){

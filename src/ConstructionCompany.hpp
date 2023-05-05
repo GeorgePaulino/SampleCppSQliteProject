@@ -8,6 +8,9 @@
 
 using namespace std;
 
+// Solving Circular Dependency
+class Building;
+
 class ConstructionCompany
 {
 private:
@@ -17,10 +20,10 @@ public:
     string zip;
     string phone;
     float avaliation;
-    vector<Building> buildings;
+    vector<Building *> buildings;
 
-    ConstructionCompany(string cnpj, string name, string zip, string phone, float avaliation);
     ConstructionCompany();
+    ConstructionCompany(string cnpj, string name, string zip, string phone, float avaliation);
     ~ConstructionCompany();
-    void deleteCompany(ConstructionCompany *cc);
+    int DeleteCompany();
 };

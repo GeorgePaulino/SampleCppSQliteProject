@@ -4,7 +4,7 @@
 
 using namespace std;
 
-class LegalPerson : public ClientBase
+class LegalClient : public ClientBase
 {
 public:
     string zip;
@@ -13,8 +13,9 @@ public:
 
     vector<Building> buildings;
 
-    LegalPerson(/* args */);
-    ~LegalPerson();
+    LegalClient(/* args */);
+    ~LegalClient();
 
-    void deletePerson(LegalPerson *p);
+    int DeleteClient() override;
+    void PrintClient() override;
 };

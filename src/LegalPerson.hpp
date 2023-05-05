@@ -1,22 +1,20 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include "Building.hpp"
-#include "ClietBase.hpp"
+#include<string>
+#include"ClientBase.hpp"
+#include"Building.hpp"
 
 using namespace std;
 
-class LegalPerson : public ClientBase {
+class LegalPerson : public ClientBase
+{
 public:
-    vector<Building> legalPerson;
-    int zipCode;
+    string zip;
+    string occupation;
     float avaliation;
-    string occupationArea, avaliationName;
 
-    LegalPerson(){}
-    ~LegalPerson(){}
+    vector<Building> buildings;
 
-    void deletePerson(LegalPerson *p){}
+    LegalPerson(/* args */);
+    ~LegalPerson();
 
-    void avaliation(float a){}
+    void deletePerson(LegalPerson *p);
 };

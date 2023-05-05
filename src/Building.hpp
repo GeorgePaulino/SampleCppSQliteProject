@@ -1,19 +1,26 @@
 #pragma once
+#include"ConstructionCompany.hpp"
+#include"ClientBase.hpp"
+
 #include<string>
+
 using namespace std;
+
+// Solving Circular Dependency
+class ConstructionCompany;
 
 class Building
 {
 public:
-    string cnpj;
-    string clientCnpj;
-    
+    ConstructionCompany* company;
+    ClientBase* person;
+
     float price;
-    string names;
+    string name;
     string startDate;
     string endDate;
 
-    Building();
+    Building(/* args */);
     ~Building();
     void deleteBuilding(Building *b);
 };

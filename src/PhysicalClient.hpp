@@ -6,7 +6,7 @@ class PhysicalClient : public ClientBase
 {
 public:
     float income;
-    Building building;
+    Building* building;
     
     PhysicalClient(/* args */);
     ~PhysicalClient();

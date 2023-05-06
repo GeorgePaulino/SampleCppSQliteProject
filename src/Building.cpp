@@ -35,6 +35,18 @@ int Building::DeleteBuilding(){
         return 2;
     }
 
+    //deleta tabla building 
+    string del;
+    del += "DROP TABLE building";
+    
+    rc = sqlite3_exec(db, del.c_str(), NULL, NULL, &errMsg);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Error executing SQL statement: " << errMsg << std::endl;
+        sqlite3_free(errMsg);
+        sqlite3_close(db);
+        return 2;
+    }
+
     // Close the database connection
     sqlite3_close(db);
 

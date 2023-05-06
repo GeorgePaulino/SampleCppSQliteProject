@@ -11,7 +11,7 @@ public:
     string occupation;
     float avaliation;
 
-    vector<Building> buildings;
+    vector<Building*> buildings;
 
     LegalClient(/* args */);
     ~LegalClient();

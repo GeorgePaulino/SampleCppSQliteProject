@@ -27,7 +27,6 @@ int main() {
             //relatorio 
             break;
         case(2):
-            
             break;
         case(3):
             cout << "Buscar por resgistro    01";

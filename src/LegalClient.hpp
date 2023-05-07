@@ -13,7 +13,7 @@ public:
 
     vector<Building*> buildings;
 
-    LegalClient(/* args */);
+    LegalClient(string zip, string name, string phone, string occupation, float avaliation);
     ~LegalClient();
 
     int DeleteClient() override;

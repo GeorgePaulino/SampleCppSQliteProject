@@ -67,7 +67,7 @@ int main() {
             cout << "opção invalida \n Por favor digitar outro numero:"
             break;
         }
-
+        
     }while(opiton == 4) 
 
     cout << "Obrigado por sua prefêrencia (-; .";

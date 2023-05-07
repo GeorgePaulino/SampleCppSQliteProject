@@ -1,11 +1,11 @@
 #include "PhysicalClient.hpp"
 
-PhysicalClient::PhysicalClient()
-{
-}
-PhysicalClient::~PhysicalClient()
-{
-}
+PhysicalClient::
+PhysicalClient(string zip, string name, string phone, string income, string startDate, string endDate)
+:
+    zip(zip), name(name), phone(phone), income(income), StartDate(StartDate), EndDate(EndDate){}
+
+PhysicalClient::~PhysicalClient(){}
 
 int PhysicalClient::DeleteClient()
 {

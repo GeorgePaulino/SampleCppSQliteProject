@@ -1,7 +1,10 @@
 #include "LegalClient.hpp"
+//    string id ; string name; string phone, string occupation; float avaliation;
+LegalClient::LegalClient(string zip, string name, string phone, string occupation, float avaliation)
+:
+    zip(zip), name(name), phone(phone), occupation(occupation), avaliation(avaliation) {}
 
-LegalClient::LegalClient(){}
-LegalClient::~LegalClient(){}
+LegalClient::~LegalClie, nt(){}
 
 int LegalClient::DeleteClient()
 {

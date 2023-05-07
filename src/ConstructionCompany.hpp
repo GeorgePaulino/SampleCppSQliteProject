@@ -19,11 +19,11 @@ public:
     string name;
     string zip;
     string phone;
-    float avaliation;
+    string avaliation;
     vector<Building *> buildings;
 
     ConstructionCompany();
-    ConstructionCompany(string cnpj, string name, string zip, string phone, float avaliation);
+    ConstructionCompany(string cnpj, string name, string zip, string phone, string avaliation);
     ~ConstructionCompany();
     int DeleteCompany();
 };

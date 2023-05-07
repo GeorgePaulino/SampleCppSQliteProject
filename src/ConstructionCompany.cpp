@@ -16,6 +16,15 @@ ConstructionCompany::~ConstructionCompany()
 }
 
 int ConstructionCompany::DeleteCompany(){
-    cout << "Companinha de Construção Deleta";
+    sqlite3 *db;
+    if(SqliteManager::OpenDB(db)) return 1;
+    string comm = "DELETE FROM ConstructionCompany WHERE CNPJ = '" + cnpj + "'";
+    if(SqliteManager::Execute(db, comm)) return 2;
+    sqlite3_close(db);
+    cout << "Construction Company Deleted" << endl;
     return 0;
+}
+
+bool ConstructionCompany::HasBuilding(){
+    return buildings.size() != 0;
 }

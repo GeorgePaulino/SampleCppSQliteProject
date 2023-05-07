@@ -9,45 +9,22 @@ Building::~Building()
 }
 
 int Building::DeleteBuilding(){
-    if(client->type == 0){
-        return 0;
-    }
-    
     sqlite3 *db;
-    char* errMsg = 0;
 
-    int rc = sqlite3_open("./database/Database.sqlite", &db);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "Cannot open database: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return 1;
+    if(SqliteManager::OpenDB(db)) return 1;
+
+    string comm;
+
+    if(client->type == 0){
+        comm = "UPDATE ClientPhysical SET CompanyCNPJ='', BuildingName='', BuildingPrice=0, BuildingStartDate='', BuildingEndDate='' WHERE CPF='" + client->id + "'";
+    } else if (client->type == 1) {
+        comm = "DELETE FROM Building WHERE CompanyCNPJ = '" + company->cnpj + 
+            "' AND ClientCNPJ = '" + client->id + "'";
     }
 
-    string comm = "DELETE FROM Building WHERE CompanyCNPJ = '";
-    comm += company->cnpj + "' AND ClientCNPJ = '" + client->id + "'";
-
-    rc = sqlite3_exec(db, comm.c_str(), NULL, NULL, &errMsg);
-    if (rc != SQLITE_OK) {
-        std::cerr << "Error executing SQL statement: " << errMsg << std::endl;
-        sqlite3_free(errMsg);
-        sqlite3_close(db);
-        return 2;
-    }
-
-    //deleta tabla building 
-    string del;
-    del += "DROP TABLE building";
-    
-    rc = sqlite3_exec(db, del.c_str(), NULL, NULL, &errMsg);
-    if (rc != SQLITE_OK) {
-        std::cerr << "Error executing SQL statement: " << errMsg << std::endl;
-        sqlite3_free(errMsg);
-        sqlite3_close(db);
-        return 2;
-    }
-
-    // Close the database connection
+    if(SqliteManager::Execute(db, comm)) return 2;
     sqlite3_close(db);
+
+    cout << "Building Deleted" << endl;
 
 }

@@ -1,4 +1,7 @@
+#pragma once
 #include<string>
+
+#include"SqliteManager.hpp"
 #include"ClientBase.hpp"
 #include"Building.hpp"
 
@@ -11,11 +14,14 @@ public:
     string occupation;
     float avaliation;
 
-    vector<Building*> buildings;
+    vector<Building> buildings;
 
     LegalClient(/* args */);
     ~LegalClient();
 
     int DeleteClient() override;
+    int UpdateClient() override;
+    int CreateClient() override;
     void PrintClient() override;
+    bool HasBuilding() override;
 };

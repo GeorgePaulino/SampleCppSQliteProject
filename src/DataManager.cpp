@@ -12,21 +12,12 @@ DataManager::DataManager()
 int DataManager::LoadCompanies()
 {
     sqlite3 *db;
-    int rc = sqlite3_open("./database/Database.sqlite", &db);
-    if (rc)
-    {
-        std::cerr << "Cannot open database: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return 1;
-    }
+    if(SqliteManager::OpenDB(db)) return 1;
+
+    string comm = "SELECT * FROM ConstructionCompany";
+
     sqlite3_stmt *companyDataRow;
-    rc = sqlite3_prepare_v2(db, "SELECT * FROM ConstructionCompany", -1, &companyDataRow, nullptr);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "Cannot prepare statement: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return 2;
-    }
+    if(SqliteManager::ExecuteStmt(db, comm.c_str(), &companyDataRow)) return 2;
 
     while (sqlite3_step(companyDataRow) == SQLITE_ROW)
     {
@@ -48,29 +39,18 @@ int DataManager::LoadCompanies()
     {
         std::cout << "CNPJ: " << data.cnpj << " | Name: " << data.name << std::endl;
     }
-
     return 0;
 }
 
 int DataManager::LoadPhysicalClients()
 {
     sqlite3 *db;
-    int rc = sqlite3_open("./database/Database.sqlite", &db);
-    if (rc)
-    {
-        std::cerr << "Cannot open database: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return 1;
-    }
+    if(SqliteManager::OpenDB(db)) return 1;
+
+    string comm = "SELECT * FROM ClientPhysical";
 
     sqlite3_stmt *physicalClientsDataRow;
-    rc = sqlite3_prepare_v2(db, "SELECT * FROM ClientPhysicalClient", -1, &physicalClientsDataRow, nullptr);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "Cannot prepare statement: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return 2;
-    }
+    if(SqliteManager::ExecuteStmt(db, comm.c_str(), &physicalClientsDataRow)) return 2;
 
     while (sqlite3_step(physicalClientsDataRow) == SQLITE_ROW)
     {
@@ -80,6 +60,8 @@ int DataManager::LoadPhysicalClients()
         data.name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 1)));
         data.phone = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 2)));
         data.income = sqlite3_column_double(physicalClientsDataRow, 3);
+
+        data.building.company = nullptr;
         std::string companyCNPJ = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 4)));
         for (auto &c : companies)
         {
@@ -88,13 +70,11 @@ int DataManager::LoadPhysicalClients()
                 data.building.company = &c;
             }
         }
-        data.building.client = &data;
         data.building.name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 5)));
         data.building.price = sqlite3_column_double(physicalClientsDataRow, 6);
         data.building.startDate = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 7)));
         data.building.endDate = std::string(reinterpret_cast<const char *>(sqlite3_column_text(physicalClientsDataRow, 8)));
         physicalClients.push_back(data);
-        allClients.push_back(&data);
     }
 
     sqlite3_finalize(physicalClientsDataRow);
@@ -105,31 +85,20 @@ int DataManager::LoadPhysicalClients()
     // Uncomment to show all loaded physical clients.
     for (const auto &data : physicalClients)
     {
-        std::cout << "CPF: " << data.id << " | Name: " << data.name << " | Building Company: " << data.building.company->cnpj << std::endl;
+        std::cout << "CPF: " << data.id << " | Name: " << data.name << " | Has Building? " << (data.building.company != nullptr ? "Yes" : "No") << std::endl;
     }
-
     return 0;
 }
 
 int DataManager::LoadLegalClients()
 {
     sqlite3 *db;
-    int rc = sqlite3_open("./database/Database.sqlite", &db);
-    if (rc)
-    {
-        std::cerr << "Cannot open database: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return 1;
-    }
-
+    if(SqliteManager::OpenDB(db)) return 1;
+    
+    string comm = "SELECT * FROM ClientLegal";
+    
     sqlite3_stmt *legalClientsDataRow;
-    rc = sqlite3_prepare_v2(db, "SELECT * FROM ClientLegalClient", -1, &legalClientsDataRow, nullptr);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "Cannot prepare statement: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return 2;
-    }
+    if(SqliteManager::ExecuteStmt(db, comm.c_str(), &legalClientsDataRow)) return 2;
 
     while (sqlite3_step(legalClientsDataRow) == SQLITE_ROW)
     {
@@ -142,17 +111,11 @@ int DataManager::LoadLegalClients()
         data.occupation = std::string(reinterpret_cast<const char *>(sqlite3_column_text(legalClientsDataRow, 4)));
         data.avaliation = sqlite3_column_double(legalClientsDataRow, 5);
 
-        sqlite3_stmt *legalClientBuildingsDataRow;
-        std::string comm = "SELECT * FROM Building b WHERE b.ClientCNPJ ='";
-        comm = comm.append(data.id) + "'";
 
-        rc = sqlite3_prepare_v2(db, comm.c_str(), -1, &legalClientBuildingsDataRow, nullptr);
-        if (rc != SQLITE_OK)
-        {
-            std::cerr << "Cannot prepare statement: " << sqlite3_errmsg(db) << std::endl;
-            sqlite3_close(db);
-            return 3;
-        }
+        comm = "SELECT * FROM Building WHERE ClientCNPJ ='" + data.id + "'";
+
+        sqlite3_stmt *legalClientBuildingsDataRow;
+        if(SqliteManager::ExecuteStmt(db, comm.c_str(), &legalClientBuildingsDataRow)) return 2;
 
         while (sqlite3_step(legalClientBuildingsDataRow) == SQLITE_ROW)
         {
@@ -165,7 +128,6 @@ int DataManager::LoadLegalClients()
                     building.company = &c;
                 }
             }
-            building.client = &data;
             building.name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(legalClientBuildingsDataRow, 2)));
             building.price = sqlite3_column_double(legalClientBuildingsDataRow, 3);
             building.startDate = std::string(reinterpret_cast<const char *>(sqlite3_column_text(legalClientBuildingsDataRow, 4)));
@@ -174,7 +136,6 @@ int DataManager::LoadLegalClients()
         }
 
         legalClients.push_back(data);
-        allClients.push_back(&data);
     }
 
     sqlite3_finalize(legalClientsDataRow);
@@ -186,19 +147,28 @@ int DataManager::LoadLegalClients()
 
     for (const auto &data : legalClients)
     {
-        std::cout << "CNPJ: " << data.id << " | Name: " << data.name << " | First Building Company: " << data.buildings[0].company->cnpj << std::endl;
+        std::cout << "CNPJ: " << data.id << " | Name: " << data.name << " | N Buildings: " << data.buildings.size() << std::endl;
     }
-
     return 0;
 }
 
 void DataManager::SetCompaniesRelations()
 {
-    for (auto client : allClients)
+    for(auto &client : physicalClients){
+        client.building.client = &client;
+        allClients.push_back(&client);
+    }
+    for(auto &client : legalClients){
+        for(auto &building: client.buildings) building.client = &client;
+        allClients.push_back(&client);
+    }
+
+    for (auto &client : allClients)
     {
         if (client->type == 0)
         {
             PhysicalClient *pp = (PhysicalClient *)client;
+            if(!pp->HasBuilding()) continue;
             for (auto &c : companies)
             {
                 if (pp->building.company->cnpj == c.cnpj)
@@ -207,16 +177,26 @@ void DataManager::SetCompaniesRelations()
                 }
             }
         }
-        if (client->type == 1)
+        else if (client->type == 1)
         {
             LegalClient *lp = (LegalClient *)client;
             for(auto &b : lp->buildings){
                 for(auto &c: companies){
                     if(b.company->cnpj == c.cnpj){
                         c.buildings.push_back(&b);
+                        continue;
                     }
                 }
             }
+        }
+    }
+
+    std::cout << "| Loaded Builds" << std::endl;
+
+    for(auto &company : companies){
+        cout << "Company: " << company.name << " | Buildings: " << (company.HasBuilding() ? "" : "Whitout Buildings") << endl;
+        for(auto &building: company.buildings){
+            cout << "\t" << building->name << endl;
         }
     }
 }

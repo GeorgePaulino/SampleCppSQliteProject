@@ -4,6 +4,7 @@
 #include<string>
 #include <iostream>
 
+#include"SqliteManager.hpp"
 #include"ConstructionCompany.hpp"
 #include"ClientBase.hpp"
 

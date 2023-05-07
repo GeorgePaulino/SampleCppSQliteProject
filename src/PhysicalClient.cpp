@@ -10,7 +10,7 @@ PhysicalClient::~PhysicalClient(){}
 int PhysicalClient::DeleteClient()
 {
     sqlite3 *db;
-    char* errMsg = 0;-
+    char* errMsg = 0;
 
     int rc = sqlite3_open("./database/Database.sqlite", &db);
     if (rc)

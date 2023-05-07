@@ -1,14 +1,16 @@
 #include "LegalClient.hpp"
 
-LegalClient::LegalClient(){}
-LegalClient::~LegalClient(){}
+LegalClient::LegalClient() {}
+LegalClient::~LegalClient() {}
 
 int LegalClient::DeleteClient()
 {
     sqlite3 *db;
-    if(SqliteManager::OpenDB(db)) return 1;
-    string comm = "DELETE FROM ClientLegalPerson WHERE CNPJ = '" + id + "'";
-    if(SqliteManager::Execute(db, comm)) return 2;
+    if (SqliteManager::OpenDB(&db))
+        return 1;
+    string comm = "DELETE FROM ClientLegal WHERE CNPJ = '" + id + "'";
+    if (SqliteManager::Execute(db, comm.c_str()))
+        return 2;
     sqlite3_close(db);
     cout << "Legal Client Deleted" << endl;
     return 0;
@@ -17,29 +19,51 @@ int LegalClient::DeleteClient()
 int LegalClient::UpdateClient()
 {
     sqlite3 *db;
-    if(SqliteManager::OpenDB(db)) return 1;
-    string comm = "DELETE FROM ClientLegalPerson WHERE CNPJ = '" + id + "'";
-    if(SqliteManager::Execute(db, comm)) return 2;
+    if (SqliteManager::OpenDB(&db))
+        return 1;
+    stringstream ss;
+    ss << "UPDATE ClientLegal SET CNPJ='" << id << "', Name='" << name
+       << "', PhoneNumber='" << phone << "', ZipCode='" << zip << "' OccupationArea='"
+       << occupation << "', Avaliation='" << avaliation << "' WHERE CNPJ='" << id << "'";
+    string comm = ss.str();
+    if (SqliteManager::Execute(db, comm.c_str()))
+        return 2;
     sqlite3_close(db);
-    cout << "Legal Client Deleted" << endl;
+    cout << "Legal Client Updated" << endl;
     return 0;
 }
 
 int LegalClient::CreateClient()
 {
     sqlite3 *db;
-    if(SqliteManager::OpenDB(db)) return 1;
-    string comm = "DELETE FROM ClientLegalPerson WHERE CNPJ = '" + id + "'";
-    if(SqliteManager::Execute(db, comm)) return 2;
+    if (SqliteManager::OpenDB(&db))
+        return 1;
+    
+    stringstream ss;
+    ss << "INSERT INTO ClientLegal (CNPJ, Name, PhoneNumber, ZipCode, OccupationArea, Avaliation) VALUES ('" << id << "', '"
+       << name << "', '" << phone << "', '" << zip << "', '" << occupation << "', '" << avaliation << "')";
+    string comm = ss.str();
+    
+    if (SqliteManager::Execute(db, comm.c_str()))
+        return 2;
     sqlite3_close(db);
-    cout << "Legal Client Deleted" << endl;
+
+    for(auto &building: buildings){
+        building.CreateBuilding();
+    }
+
+    cout << "Legal Client Created" << endl;
+
+
     return 0;
 }
 
-void LegalClient::PrintClient(){
+void LegalClient::PrintClient()
+{
     std::cout << "Name: " << name << " CNPJ: " << id << std::endl;
 }
 
-bool LegalClient::HasBuilding(){
+bool LegalClient::HasBuilding()
+{
     return buildings.size() != 0;
 }

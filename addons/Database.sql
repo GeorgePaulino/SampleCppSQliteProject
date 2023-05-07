@@ -9,10 +9,10 @@ CREATE TABLE IF NOT EXISTS "Building" (
 	"EndDate"	TEXT,
 	PRIMARY KEY("ClientCNPJ","CompanyCNPJ"),
 	FOREIGN KEY("CompanyCNPJ") REFERENCES "ConstructionCompany"("CNPJ") ON DELETE CASCADE,
-	FOREIGN KEY("ClientCNPJ") REFERENCES "ClientLegalPerson"("CNPJ") ON DELETE CASCADE
+	FOREIGN KEY("ClientCNPJ") REFERENCES "ClientLegal"("CNPJ") ON DELETE CASCADE
 );
-DROP TABLE IF EXISTS "ClientLegalPerson";
-CREATE TABLE IF NOT EXISTS "ClientLegalPerson" (
+DROP TABLE IF EXISTS "ClientLegal";
+CREATE TABLE IF NOT EXISTS "ClientLegal" (
 	"CNPJ"	TEXT,
 	"Name"	TEXT,
 	"PhoneNumber"	TEXT,
@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS "ClientLegalPerson" (
 	"Avaliation"	REAL,
 	PRIMARY KEY("CNPJ")
 );
-DROP TABLE IF EXISTS "ClientPhysicalPerson";
-CREATE TABLE IF NOT EXISTS "ClientPhysicalPerson" (
+DROP TABLE IF EXISTS "ClientPhysical";
+CREATE TABLE IF NOT EXISTS "ClientPhysical" (
 	"CPF"	TEXT,
 	"Name"	TEXT,
 	"PhoneNumber"	TEXT,

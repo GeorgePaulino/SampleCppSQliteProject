@@ -27,5 +27,7 @@ public:
     ConstructionCompany(string cnpj, string name, string zip, string phone, float avaliation);
     ~ConstructionCompany();
     int DeleteCompany();
+    int UpdateCompany();
+    int CreateCompany();
     bool HasBuilding();
 };

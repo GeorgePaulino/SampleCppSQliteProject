@@ -3,6 +3,7 @@
 #include<sqlite3.h>
 #include<string>
 #include <iostream>
+#include <sstream>
 
 #include"SqliteManager.hpp"
 #include"ConstructionCompany.hpp"
@@ -28,4 +29,6 @@ public:
     ~Building();
 
     int DeleteBuilding();
+    int UpdateBuilding();
+    int CreateBuilding();
 };

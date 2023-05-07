@@ -12,12 +12,10 @@ DataManager::DataManager()
 int DataManager::LoadCompanies()
 {
     sqlite3 *db;
-    if(SqliteManager::OpenDB(db)) return 1;
-
-    string comm = "SELECT * FROM ConstructionCompany";
+    if(SqliteManager::OpenDB(&db)) return 1;
 
     sqlite3_stmt *companyDataRow;
-    if(SqliteManager::ExecuteStmt(db, comm.c_str(), &companyDataRow)) return 2;
+    if(SqliteManager::ExecuteStmt(db, "SELECT * FROM ConstructionCompany", &companyDataRow)) return 2;
 
     while (sqlite3_step(companyDataRow) == SQLITE_ROW)
     {
@@ -45,7 +43,7 @@ int DataManager::LoadCompanies()
 int DataManager::LoadPhysicalClients()
 {
     sqlite3 *db;
-    if(SqliteManager::OpenDB(db)) return 1;
+    if(SqliteManager::OpenDB(&db)) return 1;
 
     string comm = "SELECT * FROM ClientPhysical";
 
@@ -93,7 +91,7 @@ int DataManager::LoadPhysicalClients()
 int DataManager::LoadLegalClients()
 {
     sqlite3 *db;
-    if(SqliteManager::OpenDB(db)) return 1;
+    if(SqliteManager::OpenDB(&db)) return 1;
     
     string comm = "SELECT * FROM ClientLegal";
     

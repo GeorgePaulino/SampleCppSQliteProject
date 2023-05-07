@@ -3,7 +3,9 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
     "files.associations": {
         "*.css": "css",
-        "random": "cpp"
+        "random": "cpp",
+        "iosfwd": "cpp",
+        "sstream": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

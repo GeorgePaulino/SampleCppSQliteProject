@@ -10,10 +10,10 @@ PhysicalClient::~PhysicalClient()
 int PhysicalClient::DeleteClient()
 {
     sqlite3 *db;
-    if (SqliteManager::OpenDB(db))
+    if (SqliteManager::OpenDB(&db))
         return 1;
-    string comm = "DELETE FROM ClientPhysicalPerson WHERE CPF = '" + id + "'";
-    if (SqliteManager::Execute(db, comm))
+    string comm = "DELETE FROM ClientPhysical WHERE CPF = '" + id + "'";
+    if (SqliteManager::Execute(db, comm.c_str()))
         return 2;
     sqlite3_close(db);
     cout << "Physical Client Deleted" << endl;
@@ -23,27 +23,22 @@ int PhysicalClient::DeleteClient()
 int PhysicalClient::UpdateClient()
 {
     sqlite3 *db;
-    if (SqliteManager::OpenDB(db))
+    if (SqliteManager::OpenDB(&db))
         return 1;
     stringstream ss;
-    ss << "UPDATE ClientPhysicalPerson SET CPF='" << id << "', Name='" << name
-       << "', PhoneNumber='" << phone << "', Income='" << income << "'";
-    if (HasBuilding())
-    {
-        ss << ", CompanyCNPJ='" << building.company->cnpj << "', BuildingName='"
-           << building.name << "', BuildingPrice='" << building.price
-           << "', BuildingStartDate='" << building.startDate << "', BuildingEndDate='"
-           << building.endDate << "'";
-    }
-    else
-    {
-        ss << ", CompanyCNPJ='', BuildingName='', BuildingPrice=0, BuildingStartDate='', BuildingEndDate=''";
-    }
-    ss << " WHERE CPF='" << id << "'";
+    
+    ss << "UPDATE ClientPhysical SET CPF='" << id << "', Name='" << name
+       << "', PhoneNumber='" << phone << "', Income='" << income << "'"
+       << " WHERE CPF='" << id << "'";
     string comm = ss.str();
-    if (SqliteManager::Execute(db, comm))
+
+    if (SqliteManager::Execute(db, comm.c_str()))
         return 2;
+
     sqlite3_close(db);
+
+    if(HasBuilding()) building.UpdateBuilding();
+
     cout << "Physical Client Updated" << endl;
     return 0;
 }
@@ -51,32 +46,25 @@ int PhysicalClient::UpdateClient()
 int PhysicalClient::CreateClient()
 {
     sqlite3 *db;
-    if (SqliteManager::OpenDB(db))
+    if (SqliteManager::OpenDB(&db))
         return 1;
 
     stringstream ss;
-    ss << "INSERT INTO ClientPhysical (CPF, Name, PhoneNumber, Income, CompanyCNPJ, BuildingName, BuildingPrice, BuildingStartDate, BuildingEndDate) VALUES ('"
-       << id << "', '" << name << "', '" << phone << "', '" << income;
-
-    if (HasBuilding())
-    {
-        ss << "', '" << building.company->cnpj << "', '" << building.name << "', '" << building.price << "', '"
-           << building.startDate << "', '" << building.endDate << "')";
-    }
-    else
-    {
-        ss << "', '', '', 0, '', '')";
-    }
     
+    ss << "INSERT INTO ClientPhysical (CPF, Name, PhoneNumber, Income) VALUES ('"
+       << id << "', '" << name << "', '" << phone << "', '" << income << "')";
+
     string comm = ss.str();
 
-    if (SqliteManager::Execute(db, comm))
+    if (SqliteManager::Execute(db, comm.c_str()))
         return 2;
-    
+
     sqlite3_close(db);
-    
+
+    if (HasBuilding()) building.UpdateBuilding();
+
     cout << "Physical Client Created" << endl;
-    
+
     return 0;
 }
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 
+#include"SqliteManager.hpp"
 #include "ConstructionCompany.hpp"
 #include "ClientBase.hpp"
 #include "Building.hpp"

@@ -4,49 +4,74 @@ LegalClient::LegalClient(string zip, string name, string phone, string occupatio
 :
     zip(zip), name(name), phone(phone), occupation(occupation), avaliation(avaliation) {}
 
+<<<<<<< HEAD
 LegalClient::~LegalClie, nt(){}
+=======
+LegalClient::LegalClient() {}
+LegalClient::~LegalClient() {}
+>>>>>>> 473453e66982ef3d29a70206c2419f2a775050ec
 
 int LegalClient::DeleteClient()
 {
     sqlite3 *db;
-    char* errMsg = 0;
-
-    int rc = sqlite3_open("./database/Database.sqlite", &db);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "Cannot open database: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
+    if (SqliteManager::OpenDB(&db))
         return 1;
-    }
-
-    //erro em buildings->client->id
-    string comm = "DELETE FROM ClientPhysicalPerson WHERE CNPJ = '";
-    comm += buildings->client->id;
-
-    rc = sqlite3_exec(db, comm.c_str(), NULL, NULL, &errMsg);
-    if (rc != SQLITE_OK) {
-        std::cerr << "Error executing SQL statement: " << errMsg << std::endl;
-        sqlite3_free(errMsg);
-        sqlite3_close(db);
+    string comm = "DELETE FROM ClientLegal WHERE CNPJ = '" + id + "'";
+    if (SqliteManager::Execute(db, comm.c_str()))
         return 2;
-    }
-
-    // Close the database connection
     sqlite3_close(db);
-
-    sqlite3 *db;
-    int rc = sqlite3_open("./database/Database.sqlite", &db);
-    if (rc)
-    {
-        std::cerr << "Cannot open database: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
-        return 1;
-    }
-    
-    cout << "Pessoa Fisica deletada ";
+    cout << "Legal Client Deleted" << endl;
     return 0;
 }
 
-void LegalClient::PrintClient(){
+int LegalClient::UpdateClient()
+{
+    sqlite3 *db;
+    if (SqliteManager::OpenDB(&db))
+        return 1;
+    stringstream ss;
+    ss << "UPDATE ClientLegal SET CNPJ='" << id << "', Name='" << name
+       << "', PhoneNumber='" << phone << "', ZipCode='" << zip << "' OccupationArea='"
+       << occupation << "', Avaliation='" << avaliation << "' WHERE CNPJ='" << id << "'";
+    string comm = ss.str();
+    if (SqliteManager::Execute(db, comm.c_str()))
+        return 2;
+    sqlite3_close(db);
+    cout << "Legal Client Updated" << endl;
+    return 0;
+}
+
+int LegalClient::CreateClient()
+{
+    sqlite3 *db;
+    if (SqliteManager::OpenDB(&db))
+        return 1;
+    
+    stringstream ss;
+    ss << "INSERT INTO ClientLegal (CNPJ, Name, PhoneNumber, ZipCode, OccupationArea, Avaliation) VALUES ('" << id << "', '"
+       << name << "', '" << phone << "', '" << zip << "', '" << occupation << "', '" << avaliation << "')";
+    string comm = ss.str();
+    
+    if (SqliteManager::Execute(db, comm.c_str()))
+        return 2;
+    sqlite3_close(db);
+
+    for(auto &building: buildings){
+        building.CreateBuilding();
+    }
+
+    cout << "Legal Client Created" << endl;
+
+
+    return 0;
+}
+
+void LegalClient::PrintClient()
+{
     std::cout << "Name: " << name << " CNPJ: " << id << std::endl;
+}
+
+bool LegalClient::HasBuilding()
+{
+    return buildings.size() != 0;
 }

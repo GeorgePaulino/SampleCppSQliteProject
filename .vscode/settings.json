@@ -4,7 +4,12 @@
     "files.associations": {
         "*.css": "css",
         "random": "cpp",
+<<<<<<< HEAD
         "typeinfo": "cpp"
+=======
+        "iosfwd": "cpp",
+        "sstream": "cpp"
+>>>>>>> 473453e66982ef3d29a70206c2419f2a775050ec
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

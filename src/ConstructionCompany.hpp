@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include"SqliteManager.hpp"
 
 #include "Building.hpp"
 
@@ -26,4 +27,7 @@ public:
     ConstructionCompany(string cnpj, string name, string zip, string phone, string avaliation);
     ~ConstructionCompany();
     int DeleteCompany();
+    int UpdateCompany();
+    int CreateCompany();
+    bool HasBuilding();
 };

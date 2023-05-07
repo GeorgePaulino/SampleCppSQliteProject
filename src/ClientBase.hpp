@@ -1,4 +1,5 @@
 #pragma once
+#include <sstream>
 #include<string>
 #include<vector>
 
@@ -13,8 +14,10 @@ public:
     string name;
     string phone;
 
-    ClientBase(/* args */);
-    virtual ~ClientBase();
     virtual int DeleteClient() = 0;
+    virtual int UpdateClient() = 0;
+    virtual int CreateClient() = 0;
     virtual void PrintClient() = 0;
+    virtual bool HasBuilding() = 0;
+
 };

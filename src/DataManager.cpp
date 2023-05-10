@@ -173,6 +173,7 @@ void DataManager::SetCompaniesRelations()
         client.building.client = &client;
         allClients.push_back(&client);
     }
+    
     for (auto &client : legalClients)
     {
         for (auto &building : client.buildings)

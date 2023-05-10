@@ -22,5 +22,5 @@ public:
     void Insert();
     ClientBase *ReadClient(ClientBase *client = nullptr);
     ConstructionCompany *ReadCompany(ConstructionCompany *company = nullptr);
-    Building *ReadBuilding();
+    Building *ReadBuilding(Building *building = nullptr);
 };

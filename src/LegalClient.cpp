@@ -39,7 +39,7 @@ int LegalClient::UpdateClient(string lastId)
     if (SqliteManager::Execute(db, comm.c_str()))
         return 2;
 
-    comm = "DELETE FROM Building WHERE ClientCNPJ = '" + id + "'";
+    comm = "DELETE FROM Building WHERE ClientCNPJ = '" + lastId + "'";
     if (SqliteManager::Execute(db, comm.c_str()))
         return 3;
     sqlite3_close(db);

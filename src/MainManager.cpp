@@ -19,7 +19,8 @@ void MainManager::MainPage()
         cout << "R: ";
         if (cin >> type)
         {
-            cin.ignore();
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');;
             cout << endl;
             switch (type)
             {
@@ -83,7 +84,8 @@ void MainManager::Update()
         cout << "R: ";
         if (cin >> type)
         {
-            cin.ignore();
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');;
             cout << endl;
             switch (type)
             {
@@ -95,6 +97,9 @@ void MainManager::Update()
                 if (c)
                 {
                     auto newC = ReadClient(c);
+                    if(c->type == 1){
+                        ((LegalClient *) newC)->buildings = ((LegalClient *)c)->buildings;
+                    }
                     newC->UpdateClient(c->id);
                     cout << "Cliente Atualizado";
                 }
@@ -128,7 +133,7 @@ void MainManager::Update()
             }
             case 3:
             {
-                cout << "Client (ID / CPF): ";
+                cout << "Client ID (CPF / CNPJ): ";
                 getline(cin, id);
                 cout << endl;
                 auto client = DataMg->GetClient(id);
@@ -138,11 +143,12 @@ void MainManager::Update()
                          << endl;
                     break;
                 }
+
                 cout << "CNPJ: ";
                 getline(cin, id);
                 cout << endl;
-                auto c = DataMg->GetCompany(id);
-                if (!c)
+                auto company = DataMg->GetCompany(id);
+                if (!company)
                 {
                     cout << "Construtora não registrada" << endl
                          << endl;
@@ -150,16 +156,19 @@ void MainManager::Update()
                 }
 
                 bool exist;
-                for (auto &b : c->buildings)
+                for (auto &b : company->buildings)
                 {
                     if (b->client->id == client->id)
                     {
-                        b->DeleteBuilding();
+                        auto newB = ReadBuilding(b);
+                        newB->client = client;
+                        newB->company = company;
+                        newB->UpdateBuilding();
                         exist = true;
                     }
                 }
                 if (exist)
-                    cout << "Construção Removida dos Registros.";
+                    cout << "Construção Atualizada.";
                 else
                 {
                     cout << "Construção não registrada.";
@@ -209,7 +218,8 @@ void MainManager::Delete()
         cout << "R: ";
         if (cin >> type)
         {
-            cin.ignore();
+            cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
             cout << endl;
             switch (type)
             {
@@ -251,7 +261,7 @@ void MainManager::Delete()
             }
             case 3:
             {
-                cout << "Client (ID / CPF): ";
+                cout << "Client ID (CPF / CNPJ): ";
                 getline(cin, id);
                 cout << endl;
                 auto client = DataMg->GetClient(id);
@@ -260,6 +270,16 @@ void MainManager::Delete()
                     cout << "Cliente não registrado." << endl
                          << endl;
                     break;
+                } else if(client->type == 0){
+                    if(client->HasBuilding()){
+                        ((PhysicalClient *)client)->building.DeleteBuilding();
+                        cout << "Construção Removida dos Registros." << endl << endl;
+                        break;
+                    }
+                    else{
+                        cout << "Construção não registrada." << endl << endl;
+                        break;
+                    }
                 }
                 cout << "CNPJ: ";
                 getline(cin, id);
@@ -331,7 +351,8 @@ void MainManager::Search()
         cout << "R: ";
         if (cin >> type)
         {
-            cin.ignore();
+            cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
             cout << endl;
 
             switch (type)
@@ -420,7 +441,8 @@ void MainManager::Insert()
         cout << "R: ";
         if (cin >> type)
         {
-            cin.ignore();
+            cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
             cout << endl
                  << endl;
             switch (type)
@@ -540,7 +562,8 @@ ClientBase *MainManager::ReadClient(ClientBase *client)
             float income = c->income;
             cout << "Renda do cliente (" << c->income << "): ";
             cin >> income;
-            cin.ignore();
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');;
             cout << endl;
             return new PhysicalClient(0, id, name, phone, income);
         }
@@ -558,12 +581,13 @@ ClientBase *MainManager::ReadClient(ClientBase *client)
 
             cout << "Área de Atuação (" << c->occupation << "): ";
             getline(cin, occupation);
-            if (zip == "")
-                zip = c->occupation;
+            if (occupation == "")
+                occupation = c->occupation;
 
             cout << "Média de Avaliações (" << c->avaliation << "): ";
             cin >> avaliation;
-            cin.ignore();
+            cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
             cout << endl;
             return new LegalClient(1, id, name, phone, zip, occupation, avaliation);
         }
@@ -581,7 +605,8 @@ ClientBase *MainManager::ReadClient(ClientBase *client)
     {
         cout << "R: ";
         cin >> type;
-        cin.ignore();
+        cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
         if (type == 3)
             return nullptr;
         else if (type != 1 && type != 2)
@@ -616,7 +641,8 @@ ClientBase *MainManager::ReadClient(ClientBase *client)
         float income;
         cout << "Renda do cliente: ";
         cin >> income;
-        cin.ignore();
+        cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
 
         client = new PhysicalClient(0, id, name, phone, income);
         break;
@@ -633,7 +659,8 @@ ClientBase *MainManager::ReadClient(ClientBase *client)
         getline(cin, occupation);
         cout << "Média de Avaliações: ";
         cin >> avaliation;
-        cin.ignore();
+        cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
         client = new LegalClient(1, id, name, phone, zip, occupation, avaliation);
         break;
     }
@@ -652,7 +679,7 @@ ConstructionCompany *MainManager::ReadCompany(ConstructionCompany *company)
     if (update)
     {
         avaliation = company->avaliation;
-        cout << "[ Atualizando Companhie ]" << endl;
+        cout << "[ Atualizando Construtora ]" << endl;
         cout << "Obs: Deixe o valor em branco pra não altera-lo." << endl
              << endl;
         cout << "CNPJ da construtora: (" << company->cnpj << "): ";
@@ -673,7 +700,8 @@ ConstructionCompany *MainManager::ReadCompany(ConstructionCompany *company)
             zip = company->zip;
         cout << "Média de avaliações: (" << company->avaliation << "): ";
         cin >> avaliation;
-        cin.ignore();
+        cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
     }
     else
     {
@@ -695,57 +723,90 @@ ConstructionCompany *MainManager::ReadCompany(ConstructionCompany *company)
         getline(cin, zip);
         cout << "Média de avaliações: ";
         cin >> avaliation;
-        cin.ignore();
+        cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
     }
 
     cout << endl;
     return new ConstructionCompany(cnpj, name, zip, phone, avaliation);
 }
 
-Building *MainManager::ReadBuilding()
+Building *MainManager::ReadBuilding(Building *building)
 {
+    bool update = building;
     string cnpj, id;
     ConstructionCompany *company;
     ClientBase *client;
     string name, startDate, endDate;
     float price;
 
-    cout << "[ Nova Construção ]" << endl
-         << endl;
-    cout << "Client ID (CPF / CPNJ) do cliente: ";
-    getline(cin, id);
-    client = DataMg->GetClient(id);
-    if (!client)
+    if (update)
     {
-        cout << endl;
-        cout << "Este cliente não está registrado no sistema." << endl
-             << "Faça o seu registro antes de continuar." << endl;
-        return nullptr;
-    }
+        price = building->price;
+        cout << "[ Atualizando Construção ]" << endl;
+        cout << "Obs: Deixe o valor em branco pra não altera-lo." << endl
+             << endl;
 
-    cout << "CNPJ da construtora: ";
-    getline(cin, cnpj);
-    company = DataMg->GetCompany(cnpj);
-    if (!company)
+        cout << "Nome da obra: (" << building->name << "): ";
+        getline(cin, name);
+        if (name == "")
+            name = building->name;
+        
+        cout << "Preço da obra: (" << building->price << "): ";
+        cin >> price;
+        cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+
+        cout << "Data de início: (" << building->startDate << "): ";
+        getline(cin, startDate);
+        if(startDate == "")
+            startDate = building->startDate;
+
+        cout << "Data do fim: (" << building->endDate << "): ";
+        getline(cin, endDate);
+        if(endDate == "")
+            endDate = building->endDate;
+    }
+    else
     {
-        cout << endl;
-        cout << "Esta construtora não está registrada no sistema." << endl
-             << "Faça o seu registro antes de continuar." << endl;
-        return nullptr;
+        cout << "[ Nova Construção ]" << endl
+             << endl;
+        cout << "Client ID (CPF / CPNJ) do cliente: ";
+        getline(cin, id);
+        client = DataMg->GetClient(id);
+        if (!client)
+        {
+            cout << endl;
+            cout << "Este cliente não está registrado no sistema." << endl
+                 << "Faça o seu registro antes de continuar." << endl;
+            return nullptr;
+        }
+
+        cout << "CNPJ da construtora: ";
+        getline(cin, cnpj);
+        company = DataMg->GetCompany(cnpj);
+        if (!company)
+        {
+            cout << endl;
+            cout << "Esta construtora não está registrada no sistema." << endl
+                 << "Faça o seu registro antes de continuar." << endl;
+            return nullptr;
+        }
+
+        cout << "Nome da obra: ";
+        getline(cin, name);
+
+        cout << "Preço da obra: ";
+        cin >> price;
+        cin.clear();
+cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+
+        cout << "Data de início: ";
+        getline(cin, startDate);
+
+        cout << "Data do fim: ";
+        getline(cin, endDate);
     }
-
-    cout << "Nome da obra: ";
-    getline(cin, name);
-
-    cout << "Preço da obra: ";
-    cin >> price;
-    cin.ignore();
-
-    cout << "Data de início: ";
-    getline(cin, startDate);
-
-    cout << "Data do fim: ";
-    getline(cin, endDate);
 
     cout << endl;
 

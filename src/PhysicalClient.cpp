@@ -1,10 +1,15 @@
 #include "PhysicalClient.hpp"
 
-PhysicalClient::PhysicalClient() {}
+PhysicalClient::PhysicalClient()
+{
+    building.client = this;
+    building.company = nullptr;
+}
 PhysicalClient::PhysicalClient(int type, string id, string name, string phone, float income)
-    : ClientBase(type, id, name, phone), income(income) {
-        building.client = this;
-        building.company = nullptr;
+    : ClientBase(type, id, name, phone), income(income)
+{
+    building.client = this;
+    building.company = nullptr;
 }
 
 PhysicalClient::~PhysicalClient() {}
@@ -39,7 +44,7 @@ int PhysicalClient::UpdateClient(string lastId)
        << "BuildingStartDate='', "
        << "BuildingEndDate='' "
        << "WHERE CPF='" << id << "'";
-       
+
     string comm = ss.str();
 
     if (SqliteManager::Execute(db, comm.c_str()))
@@ -74,7 +79,7 @@ int PhysicalClient::CreateClient()
     if (HasBuilding())
         building.UpdateBuilding();
 
-    //cout << "Physical Client Created" << endl;
+    // cout << "Physical Client Created" << endl;
 
     return 0;
 }

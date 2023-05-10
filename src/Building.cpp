@@ -58,9 +58,11 @@ int Building::UpdateBuilding()
     }
     else if (client->type == 1)
     {
+        cout << company->cnpj;
+        cout << client->id;
         ss << "UPDATE Building SET CompanyCNPJ='" << company->cnpj << "', Name='" << name << "', Price='" << price
            << "', StartDate='" << startDate << "', EndDate='" << endDate
-           << "' WHERE ClientCNPJ='" << client->id << "'";
+           << "' WHERE ClientCNPJ='" << client->id << "' AND CompanyCNPJ='" << company->cnpj << "'";
     }
 
     string comm = ss.str();

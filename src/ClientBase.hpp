@@ -19,7 +19,7 @@ public:
 
     bool Search(string info);
     virtual int DeleteClient() = 0;
-    virtual int UpdateClient() = 0;
+    virtual int UpdateClient(string lastId) = 0;
     virtual int CreateClient() = 0;
     virtual void PrintClient() = 0;
     virtual bool HasBuilding() = 0;

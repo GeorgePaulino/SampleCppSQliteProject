@@ -13,7 +13,7 @@ public:
     ~PhysicalClient();
 
     int DeleteClient() override;
-    int UpdateClient() override;
+    int UpdateClient(string lastId) override;
     int CreateClient() override;
     void PrintClient() override;
     bool HasBuilding() override;

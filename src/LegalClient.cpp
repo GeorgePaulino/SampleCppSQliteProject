@@ -26,7 +26,7 @@ int LegalClient::DeleteClient()
     return 0;
 }
 
-int LegalClient::UpdateClient()
+int LegalClient::UpdateClient(string lastId)
 {
     sqlite3 *db;
     if (SqliteManager::OpenDB(&db))
@@ -34,7 +34,7 @@ int LegalClient::UpdateClient()
     stringstream ss;
     ss << "UPDATE ClientLegal SET CNPJ='" << id << "', Name='" << name
        << "', PhoneNumber='" << phone << "', ZipCode='" << zip << "', OccupationArea='"
-       << occupation << "', Avaliation='" << avaliation << "' WHERE CNPJ='" << id << "'";
+       << occupation << "', Avaliation='" << avaliation << "' WHERE CNPJ='" << lastId << "'";
     string comm = ss.str();
     if (SqliteManager::Execute(db, comm.c_str()))
         return 2;

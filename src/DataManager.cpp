@@ -33,8 +33,9 @@ int DataManager::LoadCompanies()
         ConstructionCompany data;
         data.cnpj = std::string(reinterpret_cast<const char *>(sqlite3_column_text(companyDataRow, 0)));
         data.name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(companyDataRow, 1)));
-        data.phone = std::string(reinterpret_cast<const char *>(sqlite3_column_text(companyDataRow, 2)));
-        data.avaliation = sqlite3_column_double(companyDataRow, 3);
+        data.zip = std::string(reinterpret_cast<const char *>(sqlite3_column_text(companyDataRow, 2)));
+        data.phone = std::string(reinterpret_cast<const char *>(sqlite3_column_text(companyDataRow, 3)));
+        data.avaliation = sqlite3_column_double(companyDataRow, 4);
         companies.push_back(data);
     }
 

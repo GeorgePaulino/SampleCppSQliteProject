@@ -32,7 +32,7 @@ int ConstructionCompany::DeleteCompany()
     return 0;
 }
 
-int ConstructionCompany::UpdateCompany()
+int ConstructionCompany::UpdateCompany(string lastId)
 {
     sqlite3 *db;
     if (SqliteManager::OpenDB(&db))
@@ -40,7 +40,7 @@ int ConstructionCompany::UpdateCompany()
 
     stringstream ss;
     ss << "UPDATE ConstructionCompany SET CNPJ='" << cnpj << "', Name='" << name
-       << "', PhoneNumber='" << phone << "', Avaliation='" << avaliation << "' WHERE CNPJ='" << cnpj << "'";
+       << "', Zip='" << zip << "', PhoneNumber='" << phone << "', Avaliation='" << avaliation << "' WHERE CNPJ='" << lastId << "'";
     string comm = ss.str();
 
     if (SqliteManager::Execute(db, comm.c_str()))
@@ -58,8 +58,8 @@ int ConstructionCompany::CreateCompany()
         return 1;
 
     stringstream ss;
-    ss << "INSERT INTO ConstructionCompany (CNPJ, Name, PhoneNumber, Avaliation) VALUES ('"
-       << cnpj << "', '" << name << "', '" << phone << "', " << avaliation << ")";
+    ss << "INSERT INTO ConstructionCompany (CNPJ, Name, Zip, PhoneNumber, Avaliation) VALUES ('"
+       << cnpj << "', '" << name << "', '" << zip << "', '" << phone << "', " << avaliation << ")";
     string comm = ss.str();
 
     if (SqliteManager::Execute(db, comm.c_str()))

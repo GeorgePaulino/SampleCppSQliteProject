@@ -28,7 +28,7 @@ public:
     ~ConstructionCompany();
     bool Search(string info);
     int DeleteCompany();
-    int UpdateCompany();
+    int UpdateCompany(string lastId);
     int CreateCompany();
     bool HasBuilding();
     void Print();

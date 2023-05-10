@@ -16,10 +16,11 @@ public:
     MainManager();
 
     void MainPage();
+    void Update();
     void Delete();
     void Search();
     void Insert();
-    ClientBase *ReadClient();
-    ConstructionCompany *ReadCompany();
+    ClientBase *ReadClient(ClientBase *client = nullptr);
+    ConstructionCompany *ReadCompany(ConstructionCompany *company = nullptr);
     Building *ReadBuilding();
 };

@@ -22,7 +22,7 @@ int PhysicalClient::DeleteClient()
     return 0;
 }
 
-int PhysicalClient::UpdateClient()
+int PhysicalClient::UpdateClient(string lastId)
 {
     sqlite3 *db;
     if (SqliteManager::OpenDB(&db))
@@ -37,7 +37,7 @@ int PhysicalClient::UpdateClient()
        << "CompanyCNPJ='', "
        << "BuildingName='', "
        << "BuildingStartDate='', "
-       << "BuildingEndDate=0 "
+       << "BuildingEndDate='' "
        << "WHERE CPF='" << id << "'";
        
     string comm = ss.str();

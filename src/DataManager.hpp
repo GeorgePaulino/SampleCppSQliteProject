@@ -22,6 +22,11 @@ public:
 
     DataManager();
 
+    void Reload();
+
+    ClientBase *GetClient(string id);
+    ConstructionCompany *GetCompany(string cnpj);
+    
     /**
      * @brief Load all companies to companies vector
      * @return 

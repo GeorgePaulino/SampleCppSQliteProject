@@ -1,11 +1,13 @@
 #include "PhysicalClient.hpp"
 
-PhysicalClient::
-PhysicalClient(string zip, string name, string phone, string income, string startDate, string endDate)
-:
-    zip(zip), name(name), phone(phone), income(income), StartDate(StartDate), EndDate(EndDate){}
+PhysicalClient::PhysicalClient() {}
+PhysicalClient::PhysicalClient(int type, string id, string name, string phone, float income)
+    : ClientBase(type, id, name, phone), income(income) {
+        building.client = this;
+        building.company = nullptr;
+}
 
-PhysicalClient::~PhysicalClient(){}
+PhysicalClient::~PhysicalClient() {}
 
 int PhysicalClient::DeleteClient()
 {
@@ -26,10 +28,18 @@ int PhysicalClient::UpdateClient()
     if (SqliteManager::OpenDB(&db))
         return 1;
     stringstream ss;
-    
-    ss << "UPDATE ClientPhysical SET CPF='" << id << "', Name='" << name
-       << "', PhoneNumber='" << phone << "', Income='" << income << "'"
-       << " WHERE CPF='" << id << "'";
+
+    ss << "UPDATE ClientPhysical SET "
+       << "CPF='" << id << "', "
+       << "Name='" << name << "', "
+       << "PhoneNumber='" << phone << "', "
+       << "Income='" << income << "', "
+       << "CompanyCNPJ='', "
+       << "BuildingName='', "
+       << "BuildingStartDate='', "
+       << "BuildingEndDate=0 "
+       << "WHERE CPF='" << id << "'";
+       
     string comm = ss.str();
 
     if (SqliteManager::Execute(db, comm.c_str()))
@@ -37,9 +47,9 @@ int PhysicalClient::UpdateClient()
 
     sqlite3_close(db);
 
-    if(HasBuilding()) building.UpdateBuilding();
+    if (HasBuilding())
+        building.UpdateBuilding();
 
-    cout << "Physical Client Updated" << endl;
     return 0;
 }
 
@@ -50,7 +60,7 @@ int PhysicalClient::CreateClient()
         return 1;
 
     stringstream ss;
-    
+
     ss << "INSERT INTO ClientPhysical (CPF, Name, PhoneNumber, Income) VALUES ('"
        << id << "', '" << name << "', '" << phone << "', '" << income << "')";
 
@@ -61,16 +71,23 @@ int PhysicalClient::CreateClient()
 
     sqlite3_close(db);
 
-    if (HasBuilding()) building.UpdateBuilding();
+    if (HasBuilding())
+        building.UpdateBuilding();
 
-    cout << "Physical Client Created" << endl;
+    //cout << "Physical Client Created" << endl;
 
     return 0;
 }
 
 void PhysicalClient::PrintClient()
 {
-    std::cout << "Name: " << name << " CPF: " << id << std::endl;
+    std::cout << "CPF: " << id << " | Nome: " << name << " | Telefone: " << phone << " | Income: " << income << endl;
+    if (HasBuilding())
+    {
+        std::cout << "\tConstrutora: " << building.company->cnpj << " | ";
+        building.PrintBuilding();
+    }
+    std::cout << endl;
 }
 
 bool PhysicalClient::HasBuilding()

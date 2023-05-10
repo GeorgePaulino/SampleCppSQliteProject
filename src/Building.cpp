@@ -4,6 +4,12 @@ Building::Building()
 {
 }
 
+Building::Building(ConstructionCompany* company, ClientBase* client, float price, string name, string startDate, string endDate)
+    : company(company), client(client), price(price), name(name), startDate(startDate), endDate(endDate)
+{
+}
+
+    
 Building::~Building()
 {
 }
@@ -31,7 +37,7 @@ int Building::DeleteBuilding()
         return 2;
     sqlite3_close(db);
 
-    cout << "Building Deleted" << endl;
+    // cout << "Building Deleted" << endl;
     return 0;
 }
 
@@ -64,7 +70,6 @@ int Building::UpdateBuilding()
 
     sqlite3_close(db);
 
-    cout << "Building Updated" << endl;
     return 0;
 }
 
@@ -84,7 +89,9 @@ int Building::CreateBuilding()
         return 2;
 
     sqlite3_close(db);
-
-    cout << "Building Created" << endl;
     return 0;
+}
+
+void Building::PrintBuilding(){
+    cout << "Name: " << name << " | R$: " << price << " | Start " << startDate << " - End " << endDate << endl;
 }

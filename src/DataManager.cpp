@@ -3,6 +3,15 @@
 
 DataManager::DataManager()
 {
+    Reload();
+}
+
+void DataManager::Reload(){
+    companies.clear();
+    allClients.clear();
+    legalClients.clear();
+    physicalClients.clear();
+
     LoadCompanies();
     LoadPhysicalClients();
     LoadLegalClients();
@@ -12,10 +21,12 @@ DataManager::DataManager()
 int DataManager::LoadCompanies()
 {
     sqlite3 *db;
-    if(SqliteManager::OpenDB(&db)) return 1;
+    if (SqliteManager::OpenDB(&db))
+        return 1;
 
     sqlite3_stmt *companyDataRow;
-    if(SqliteManager::ExecuteStmt(db, "SELECT * FROM ConstructionCompany", &companyDataRow)) return 2;
+    if (SqliteManager::ExecuteStmt(db, "SELECT * FROM ConstructionCompany", &companyDataRow))
+        return 2;
 
     while (sqlite3_step(companyDataRow) == SQLITE_ROW)
     {
@@ -30,25 +41,27 @@ int DataManager::LoadCompanies()
     sqlite3_finalize(companyDataRow);
     sqlite3_close(db);
 
-    std::cout << "| Loaded Companies" << std::endl;
+    // std::cout << "| Loaded Companies" << std::endl;
 
     // Uncomment to show all loaded companies.
-    for (const auto &data : companies)
+    /* for (const auto &data : companies)
     {
         std::cout << "CNPJ: " << data.cnpj << " | Name: " << data.name << std::endl;
-    }
+    } */
     return 0;
 }
 
 int DataManager::LoadPhysicalClients()
 {
     sqlite3 *db;
-    if(SqliteManager::OpenDB(&db)) return 1;
+    if (SqliteManager::OpenDB(&db))
+        return 1;
 
     string comm = "SELECT * FROM ClientPhysical";
 
     sqlite3_stmt *physicalClientsDataRow;
-    if(SqliteManager::ExecuteStmt(db, comm.c_str(), &physicalClientsDataRow)) return 2;
+    if (SqliteManager::ExecuteStmt(db, comm.c_str(), &physicalClientsDataRow))
+        return 2;
 
     while (sqlite3_step(physicalClientsDataRow) == SQLITE_ROW)
     {
@@ -78,25 +91,27 @@ int DataManager::LoadPhysicalClients()
     sqlite3_finalize(physicalClientsDataRow);
     sqlite3_close(db);
 
-    std::cout << "| Loaded Physical Clients" << std::endl;
+    // std::cout << "| Loaded Physical Clients" << std::endl;
 
     // Uncomment to show all loaded physical clients.
-    for (const auto &data : physicalClients)
+    /* for (const auto &data : physicalClients)
     {
         std::cout << "CPF: " << data.id << " | Name: " << data.name << " | Has Building? " << (data.building.company != nullptr ? "Yes" : "No") << std::endl;
     }
-    return 0;
+    return 0; */
 }
 
 int DataManager::LoadLegalClients()
 {
     sqlite3 *db;
-    if(SqliteManager::OpenDB(&db)) return 1;
-    
+    if (SqliteManager::OpenDB(&db))
+        return 1;
+
     string comm = "SELECT * FROM ClientLegal";
-    
+
     sqlite3_stmt *legalClientsDataRow;
-    if(SqliteManager::ExecuteStmt(db, comm.c_str(), &legalClientsDataRow)) return 2;
+    if (SqliteManager::ExecuteStmt(db, comm.c_str(), &legalClientsDataRow))
+        return 2;
 
     while (sqlite3_step(legalClientsDataRow) == SQLITE_ROW)
     {
@@ -109,11 +124,11 @@ int DataManager::LoadLegalClients()
         data.occupation = std::string(reinterpret_cast<const char *>(sqlite3_column_text(legalClientsDataRow, 4)));
         data.avaliation = sqlite3_column_double(legalClientsDataRow, 5);
 
-
         comm = "SELECT * FROM Building WHERE ClientCNPJ ='" + data.id + "'";
 
         sqlite3_stmt *legalClientBuildingsDataRow;
-        if(SqliteManager::ExecuteStmt(db, comm.c_str(), &legalClientBuildingsDataRow)) return 2;
+        if (SqliteManager::ExecuteStmt(db, comm.c_str(), &legalClientBuildingsDataRow))
+            return 2;
 
         while (sqlite3_step(legalClientBuildingsDataRow) == SQLITE_ROW)
         {
@@ -139,25 +154,28 @@ int DataManager::LoadLegalClients()
     sqlite3_finalize(legalClientsDataRow);
     sqlite3_close(db);
 
-    std::cout << "| Loaded Legal Clients" << std::endl;
+    // std::cout << "| Loaded Legal Clients" << std::endl;
 
     // Uncomment to show all loaded legal clients.
 
-    for (const auto &data : legalClients)
+    /* for (const auto &data : legalClients)
     {
         std::cout << "CNPJ: " << data.id << " | Name: " << data.name << " | N Buildings: " << data.buildings.size() << std::endl;
     }
-    return 0;
+    return 0; */
 }
 
 void DataManager::SetCompaniesRelations()
 {
-    for(auto &client : physicalClients){
+    for (auto &client : physicalClients)
+    {
         client.building.client = &client;
         allClients.push_back(&client);
     }
-    for(auto &client : legalClients){
-        for(auto &building: client.buildings) building.client = &client;
+    for (auto &client : legalClients)
+    {
+        for (auto &building : client.buildings)
+            building.client = &client;
         allClients.push_back(&client);
     }
 
@@ -166,7 +184,8 @@ void DataManager::SetCompaniesRelations()
         if (client->type == 0)
         {
             PhysicalClient *pp = (PhysicalClient *)client;
-            if(!pp->HasBuilding()) continue;
+            if (!pp->HasBuilding())
+                continue;
             for (auto &c : companies)
             {
                 if (pp->building.company->cnpj == c.cnpj)
@@ -178,9 +197,12 @@ void DataManager::SetCompaniesRelations()
         else if (client->type == 1)
         {
             LegalClient *lp = (LegalClient *)client;
-            for(auto &b : lp->buildings){
-                for(auto &c: companies){
-                    if(b.company->cnpj == c.cnpj){
+            for (auto &b : lp->buildings)
+            {
+                for (auto &c : companies)
+                {
+                    if (b.company->cnpj == c.cnpj)
+                    {
                         c.buildings.push_back(&b);
                         continue;
                     }
@@ -189,12 +211,30 @@ void DataManager::SetCompaniesRelations()
         }
     }
 
-    std::cout << "| Loaded Builds" << std::endl;
+    // Uncomment to show all loaded builds.
 
-    for(auto &company : companies){
+    // std::cout << "| Loaded Builds" << std::endl;
+
+    /* for (auto &company : companies)
+    {
         cout << "Company: " << company.name << " | Buildings: " << (company.HasBuilding() ? "" : "Whitout Buildings") << endl;
-        for(auto &building: company.buildings){
+        for (auto &building : company.buildings)
+        {
             cout << "\t" << building->name << endl;
         }
+    } */
+}
+
+ClientBase *DataManager::GetClient(string id){
+    for(auto &client : allClients){
+        if(client->id == id) return client;
     }
+    return nullptr;
+}
+
+ConstructionCompany *DataManager::GetCompany(string cnpj){
+    for(auto &company : companies){
+        if(company.cnpj == cnpj) return &company;
+    }
+    return nullptr;
 }

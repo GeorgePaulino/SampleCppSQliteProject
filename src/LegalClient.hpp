@@ -16,7 +16,8 @@ public:
 
     vector<Building> buildings;
 
-    LegalClient(string zip, string name, string phone, string occupation, float avaliation);
+    LegalClient();
+    LegalClient(int type, string id, string name, string phone, string zip, string occupation, float avaliation);
     ~LegalClient();
 
     int DeleteClient() override;

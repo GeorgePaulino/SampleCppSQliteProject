@@ -26,9 +26,15 @@ public:
     string endDate;
 
     Building();
+    Building(
+        ConstructionCompany* company, ClientBase* client, 
+        float price, string name, 
+        string startDate, string endDate
+    );
     ~Building();
 
     int DeleteBuilding();
     int UpdateBuilding();
     int CreateBuilding();
+    void PrintBuilding();
 };

@@ -2,10 +2,7 @@
 
 ConstructionCompany::ConstructionCompany() {}
 
-ConstructionCompany::ConstructionCompany(string cnpj, string name, string zip, string phone, float avaliation) : cnpj(cnpj), name(name), zip(zip), phone(phone), avaliation(avaliation)
-{
-    cout << "Created some" << endl;
-}
+ConstructionCompany::ConstructionCompany(string cnpj, string name, string zip, string phone, float avaliation) : cnpj(cnpj), name(name), zip(zip), phone(phone), avaliation(avaliation) {}
 
 ConstructionCompany::~ConstructionCompany()
 {
@@ -19,11 +16,19 @@ int ConstructionCompany::DeleteCompany()
     sqlite3 *db;
     if (SqliteManager::OpenDB(&db))
         return 1;
-    string comm = "DELETE FROM ConstructionCompany WHERE CNPJ = '" + cnpj + "'";
+
+    string comm = "DELETE FROM Building WHERE CompanyCNPJ = '" + cnpj + "'";
+    if (SqliteManager::Execute(db, comm.c_str()))
+        return 3;
+    comm = "DELETE FROM ConstructionCompany WHERE CNPJ = '" + cnpj + "'";
     if (SqliteManager::Execute(db, comm.c_str()))
         return 2;
+    comm = "UPDATE ClientPhysical SET CompanyCNPJ='', BuildingPrice=0, BuildingName='', BuildingStartDate='', BuildingEndDate='' WHERE CompanyCNPJ = '" + cnpj + "'";
+    if (SqliteManager::Execute(db, comm.c_str()))
+        return 2;
+
     sqlite3_close(db);
-    cout << "Construction Company Deleted" << endl;
+
     return 0;
 }
 
@@ -40,8 +45,9 @@ int ConstructionCompany::UpdateCompany()
 
     if (SqliteManager::Execute(db, comm.c_str()))
         return 2;
+
     sqlite3_close(db);
-    cout << "Construction Company Updated" << endl;
+
     return 0;
 }
 
@@ -60,13 +66,39 @@ int ConstructionCompany::CreateCompany()
         return 2;
 
     sqlite3_close(db);
-    
-    cout << "Construction Company Create" << endl;
-    
+
     return 0;
 }
 
 bool ConstructionCompany::HasBuilding()
 {
     return buildings.size() != 0;
+}
+
+bool ConstructionCompany::Search(string info)
+{
+    if (name.find(info) != std::string::npos)
+    {
+        return this;
+    }
+    else if (cnpj.find(info) != std::string::npos)
+    {
+        return this;
+    }
+}
+
+void ConstructionCompany::Print()
+{
+    std::cout << "CNPJ: " << cnpj << " | Nome: " << name << " | Telefone: " << phone << " | CEP: " << zip << " | Avaliação: " << avaliation << endl;
+    if (HasBuilding())
+    {
+        for (auto &building : buildings)
+        {
+            if (building->client->type == 0)
+                std::cout << "\tCPF: " << building->client->id << " | ";
+            else if (building->client->type == 1)
+                std::cout << "\tCNPJ: " << building->client->id << " | ";
+            building->PrintBuilding();
+        }
+    }
 }

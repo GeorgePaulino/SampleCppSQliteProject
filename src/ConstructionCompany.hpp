@@ -20,14 +20,16 @@ public:
     string name;
     string zip;
     string phone;
-    string avaliation;
+    float avaliation;
     vector<Building *> buildings;
 
     ConstructionCompany();
-    ConstructionCompany(string cnpj, string name, string zip, string phone, string avaliation);
+    ConstructionCompany(string cnpj, string name, string zip, string phone, float avaliation);
     ~ConstructionCompany();
+    bool Search(string info);
     int DeleteCompany();
     int UpdateCompany();
     int CreateCompany();
     bool HasBuilding();
+    void Print();
 };

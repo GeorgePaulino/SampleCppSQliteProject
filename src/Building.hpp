@@ -37,4 +37,5 @@ public:
     int UpdateBuilding();
     int CreateBuilding();
     void PrintBuilding();
+    string GetAsCSV();
 };

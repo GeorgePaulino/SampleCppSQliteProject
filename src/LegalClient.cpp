@@ -93,3 +93,9 @@ bool LegalClient::HasBuilding()
 {
     return buildings.size() != 0;
 }
+
+string LegalClient::GetAsCSV(){
+    stringstream ss;
+    ss << id << "," << name << "," << phone << "," << zip << "," << occupation << "," << avaliation << endl;
+    return ss.str();
+}

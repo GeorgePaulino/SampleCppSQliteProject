@@ -102,3 +102,14 @@ void ConstructionCompany::Print()
         }
     }
 }
+
+string ConstructionCompany::GetAsCSV()
+{
+    std::ostringstream ss;
+    ss << cnpj << ",";
+    ss << name << ",";
+    ss << zip << ",";
+    ss << phone << ",";
+    ss << avaliation << endl;
+    return ss.str();
+}

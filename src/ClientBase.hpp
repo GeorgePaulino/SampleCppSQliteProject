@@ -23,4 +23,5 @@ public:
     virtual int CreateClient() = 0;
     virtual void PrintClient() = 0;
     virtual bool HasBuilding() = 0;
+    virtual string GetAsCSV() = 0;
 };

@@ -20,7 +20,8 @@ void MainManager::MainPage()
         if (cin >> type)
         {
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            ;
             cout << endl;
             switch (type)
             {
@@ -42,6 +43,10 @@ void MainManager::MainPage()
             case 4:
             {
                 Delete();
+                break;
+            }
+            case 5:{
+                Export();
                 break;
             }
             case 6:
@@ -85,7 +90,8 @@ void MainManager::Update()
         if (cin >> type)
         {
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            ;
             cout << endl;
             switch (type)
             {
@@ -97,8 +103,9 @@ void MainManager::Update()
                 if (c)
                 {
                     auto newC = ReadClient(c);
-                    if(c->type == 1){
-                        ((LegalClient *) newC)->buildings = ((LegalClient *)c)->buildings;
+                    if (c->type == 1)
+                    {
+                        ((LegalClient *)newC)->buildings = ((LegalClient *)c)->buildings;
                     }
                     newC->UpdateClient(c->id);
                     cout << "Cliente Atualizado";
@@ -203,6 +210,83 @@ void MainManager::Update()
     }
 }
 
+void MainManager::Export()
+{
+    string filename = "relatory/Cliente Juridíco.csv";
+    ofstream file(filename);
+    string data;
+
+    if (file.is_open())
+    {
+        data = "CNPJ,Nome,Telefone,CEP,Ocupação,Avaliação\n";
+        for (auto c : DataMg->legalClients)
+        {
+            data += c.GetAsCSV();
+        }
+        file << data;
+        file.close();
+    }
+    else
+    {
+        cout << "Unable to open file: " << filename << endl;
+    }
+
+    filename = "relatory/Cliente Físico.csv";
+    file.open(filename);
+    if (file.is_open())
+    {
+        data = "CPF,Nome,Telefone,Renda\n";
+        for (auto c : DataMg->physicalClients)
+        {
+            data += c.GetAsCSV();
+        }
+        file << data;
+        file.close();
+    }
+    else
+    {
+        cout << "Unable to open file: " << filename << endl;
+    }
+
+    filename = "relatory/Construtoras.csv";
+    file.open(filename);
+    if (file.is_open())
+    {
+        data = "CNPJ,Nome,CEP,Telefone,Avaliação\n";
+        for (auto c : DataMg->companies)
+        {
+            data += c.GetAsCSV();
+        }
+        file << data;
+        file.close();
+    }
+    else
+    {
+        cout << "Unable to open file: " << filename << endl;
+    }
+
+    filename = "relatory/Construções.csv";
+    file.open(filename);
+    if (file.is_open())
+    {
+        data = "Nome,Preço,Data de Início,Data de Término,Construtora,Cliente\n";
+        for (auto c : DataMg->companies)
+        {
+            for(auto b: c.buildings){
+                data += b->GetAsCSV();
+            }
+        }
+        file << data;
+        file.close();
+    }
+    else
+    {
+        cout << "Unable to open file: " << filename << endl;
+    }
+
+    cout << "Relatórios Gerados" << endl << endl;
+}
+
 void MainManager::Delete()
 {
     int type;
@@ -219,7 +303,8 @@ void MainManager::Delete()
         if (cin >> type)
         {
             cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            ;
             cout << endl;
             switch (type)
             {
@@ -270,14 +355,20 @@ cin.ignore(numeric_limits<streamsize>::max(), '\n');;
                     cout << "Cliente não registrado." << endl
                          << endl;
                     break;
-                } else if(client->type == 0){
-                    if(client->HasBuilding()){
+                }
+                else if (client->type == 0)
+                {
+                    if (client->HasBuilding())
+                    {
                         ((PhysicalClient *)client)->building.DeleteBuilding();
-                        cout << "Construção Removida dos Registros." << endl << endl;
+                        cout << "Construção Removida dos Registros." << endl
+                             << endl;
                         break;
                     }
-                    else{
-                        cout << "Construção não registrada." << endl << endl;
+                    else
+                    {
+                        cout << "Construção não registrada." << endl
+                             << endl;
                         break;
                     }
                 }
@@ -352,7 +443,8 @@ void MainManager::Search()
         if (cin >> type)
         {
             cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            ;
             cout << endl;
 
             switch (type)
@@ -442,7 +534,8 @@ void MainManager::Insert()
         if (cin >> type)
         {
             cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            ;
             cout << endl
                  << endl;
             switch (type)
@@ -563,7 +656,8 @@ ClientBase *MainManager::ReadClient(ClientBase *client)
             cout << "Renda do cliente (" << c->income << "): ";
             cin >> income;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            ;
             cout << endl;
             return new PhysicalClient(0, id, name, phone, income);
         }
@@ -587,7 +681,8 @@ ClientBase *MainManager::ReadClient(ClientBase *client)
             cout << "Média de Avaliações (" << c->avaliation << "): ";
             cin >> avaliation;
             cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            ;
             cout << endl;
             return new LegalClient(1, id, name, phone, zip, occupation, avaliation);
         }
@@ -606,7 +701,8 @@ cin.ignore(numeric_limits<streamsize>::max(), '\n');;
         cout << "R: ";
         cin >> type;
         cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        ;
         if (type == 3)
             return nullptr;
         else if (type != 1 && type != 2)
@@ -642,7 +738,8 @@ cin.ignore(numeric_limits<streamsize>::max(), '\n');;
         cout << "Renda do cliente: ";
         cin >> income;
         cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        ;
 
         client = new PhysicalClient(0, id, name, phone, income);
         break;
@@ -660,7 +757,8 @@ cin.ignore(numeric_limits<streamsize>::max(), '\n');;
         cout << "Média de Avaliações: ";
         cin >> avaliation;
         cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        ;
         client = new LegalClient(1, id, name, phone, zip, occupation, avaliation);
         break;
     }
@@ -701,7 +799,8 @@ ConstructionCompany *MainManager::ReadCompany(ConstructionCompany *company)
         cout << "Média de avaliações: (" << company->avaliation << "): ";
         cin >> avaliation;
         cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        ;
     }
     else
     {
@@ -724,7 +823,8 @@ cin.ignore(numeric_limits<streamsize>::max(), '\n');;
         cout << "Média de avaliações: ";
         cin >> avaliation;
         cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        ;
     }
 
     cout << endl;
@@ -751,20 +851,21 @@ Building *MainManager::ReadBuilding(Building *building)
         getline(cin, name);
         if (name == "")
             name = building->name;
-        
+
         cout << "Preço da obra: (" << building->price << "): ";
         cin >> price;
         cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        ;
 
         cout << "Data de início: (" << building->startDate << "): ";
         getline(cin, startDate);
-        if(startDate == "")
+        if (startDate == "")
             startDate = building->startDate;
 
         cout << "Data do fim: (" << building->endDate << "): ";
         getline(cin, endDate);
-        if(endDate == "")
+        if (endDate == "")
             endDate = building->endDate;
     }
     else
@@ -799,7 +900,8 @@ cin.ignore(numeric_limits<streamsize>::max(), '\n');;
         cout << "Preço da obra: ";
         cin >> price;
         cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        ;
 
         cout << "Data de início: ";
         getline(cin, startDate);

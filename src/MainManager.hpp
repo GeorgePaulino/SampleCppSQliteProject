@@ -1,3 +1,4 @@
+#include <fstream>
 #include <limits>
 
 #include "DataManager.hpp"
@@ -17,6 +18,7 @@ public:
 
     void MainPage();
     void Update();
+    void Export();
     void Delete();
     void Search();
     void Insert();

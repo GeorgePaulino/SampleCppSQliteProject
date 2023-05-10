@@ -99,3 +99,14 @@ bool PhysicalClient::HasBuilding()
 {
     return building.company != nullptr;
 }
+
+string PhysicalClient::GetAsCSV(){
+    stringstream ss;
+    ss << type << ",";
+    ss << id << ",";
+    ss << name << ",";
+    ss << phone << ",";
+    ss << income;
+    ss << endl;
+    return ss.str();
+}

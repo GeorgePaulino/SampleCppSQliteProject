@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include"SqliteManager.hpp"
@@ -32,4 +33,5 @@ public:
     int CreateCompany();
     bool HasBuilding();
     void Print();
+    string GetAsCSV();
 };

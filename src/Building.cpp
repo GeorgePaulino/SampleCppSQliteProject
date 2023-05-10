@@ -4,12 +4,11 @@ Building::Building()
 {
 }
 
-Building::Building(ConstructionCompany* company, ClientBase* client, float price, string name, string startDate, string endDate)
+Building::Building(ConstructionCompany *company, ClientBase *client, float price, string name, string startDate, string endDate)
     : company(company), client(client), price(price), name(name), startDate(startDate), endDate(endDate)
 {
 }
 
-    
 Building::~Building()
 {
 }
@@ -94,6 +93,15 @@ int Building::CreateBuilding()
     return 0;
 }
 
-void Building::PrintBuilding(){
+void Building::PrintBuilding()
+{
     cout << "Name: " << name << " | R$: " << price << " | Start " << startDate << " - End " << endDate << endl;
+}
+
+string Building::GetAsCSV()
+{
+    std::stringstream ss;
+    ss << name << "," << price << "," << startDate << "," << endDate << ",";
+    ss << company->cnpj << "," << client->id << endl;
+    return ss.str();
 }

@@ -17,4 +17,5 @@ public:
     int CreateClient() override;
     void PrintClient() override;
     bool HasBuilding() override;
+    string GetAsCSV() override;
 };
